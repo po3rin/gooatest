@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"os"
+	"path"
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3filter"
@@ -57,6 +58,8 @@ func newRouterFromYAML(path string) (*openapi3filter.Router, error) {
 
 // NewValidator generates new Validator.
 func NewValidator(p Params) (Validator, error) {
+	request := p.ResponseRecoder.Result().Request
+	uri := path.Join(p.Host, request.URL.Path)
 	u, err := url.Parse(p.Host)
 	if err != nil {
 		return nil, err
@@ -65,7 +68,6 @@ func NewValidator(p Params) (Validator, error) {
 	if err != nil {
 		return nil, err
 	}
-	request := p.ResponseRecoder.Result().Request
 	route, _, err := router.FindRoute(request.Method, u)
 	if err != nil {
 		return nil, err
