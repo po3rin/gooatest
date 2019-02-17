@@ -11,6 +11,7 @@ var (
 
 // ToDo : to write test code.
 // func TestValidateResponse(t *testing.T) {
+//  httpReq, _ := http.NewRequest(http.MethodGet, "/users", nil)
 // 	tests := []struct {
 // 		name          string
 // 		input         gooatest.Params
@@ -19,6 +20,7 @@ var (
 // 		{
 // 			name: "",
 // 			input: gooatest.Params{
+// 				HTTPReq:    httpReq,
 // 				URI:        "http://localhost:8080/users",
 // 				SchemaPath: schemaPath,
 // 				Context:    commonContext,
