@@ -3,6 +3,7 @@ package gooatest
 import (
 	"context"
 	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"os"
@@ -27,6 +28,7 @@ type OpenAPIValidator struct {
 
 // Params is validator params
 type Params struct {
+	HTTPReq         *http.Request
 	URI             string
 	SchemaPath      string
 	Context         context.Context
@@ -65,14 +67,13 @@ func NewValidator(p Params) (Validator, error) {
 	if err != nil {
 		return nil, err
 	}
-	request := p.ResponseRecoder.Result().Request
-	route, _, err := router.FindRoute(request.Method, u)
+	route, _, err := router.FindRoute(p.HTTPReq.Method, u)
 	if err != nil {
 		return nil, err
 	}
 	// Validate response
 	requestValidationInput := &openapi3filter.RequestValidationInput{
-		Request: request,
+		Request: p.HTTPReq,
 		Route:   route,
 	}
 	responseValidationInput := &openapi3filter.ResponseValidationInput{
