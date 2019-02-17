@@ -1,0 +1,195 @@
+openapi: 3.0.2
+info:
+  title: weddinv
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: development
+paths:
+  /users:
+    get:
+      description: Userをすべて取得する
+      operationId: getUsers
+      responses:
+        '200':
+          $ref: '#/components/responses/Users'
+    post:
+      description: Userを作成する
+      operationId: createUser
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        '201':
+          $ref: '#/components/responses/User'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+  /users/{userId}:
+    get:
+      description: Userを取得する
+      operationId: getUser
+      parameters:
+        - $ref: '#/components/parameters/userIdParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      description: Userを更新する
+      operationId: updateUser
+      parameters:
+        - $ref: '#/components/parameters/userIdParam'
+      requestBody:
+        $ref: '#/components/requestBodies/User'
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+    delete:
+      description: Userを削除する
+      operationId: deleteUser
+      parameters:
+        - $ref: '#/components/parameters/userIdParam'
+      responses:
+        '204':
+          description: Userの削除に成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserProperties'
+      required:
+        - user
+    UserRequest:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserParameters'
+      required:
+        - user
+    Users:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserProperties'
+      required:
+        - users
+    UserProperties:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        attendance:
+          type: boolean
+          example: true
+        name:
+          type: string
+          example: 中村弘武
+        huri:
+          type: string
+          example: なかむらひろむ
+        address:
+          type: string
+          example: 東京都港区
+        added_at:
+          type: string
+          format: date-time
+          example: '2018-12-01T00:00:00Z'
+      required:
+        - id
+        - attendance
+        - name
+        - address
+        - added_at
+    UserParameters:
+      type: object
+      properties:
+        attendance:
+          type: boolean
+          example: true
+        name:
+          type: string
+          example: 中村弘武
+        huri:
+          type: string
+          example: なかむらひろむ
+        address:
+          type: string
+          example: 東京都港区
+      required:
+        - attendance
+        - name
+        - huri
+        - address
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorProperties'
+      required:
+        - errors
+    ErrorProperties:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Something went wrong
+        detail:
+          type: string
+          example: Something went wrong. Please try again later.
+      required:
+        - title
+        - detail
+  parameters:
+    userIdParam:
+      name: userId
+      in: path
+      description: UserのID
+      required: true
+      schema:
+        type: integer
+  requestBodies:
+    User:
+      description: 作成するUser
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserRequest'
+  responses:
+    User:
+      description: User
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    Users:
+      description: Userの配列
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Users'
+    NotFound:
+      description: リソースが見つからない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    UnprocessableEntity:
+      description: 無効なパラメータ
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'

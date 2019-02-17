@@ -1,0 +1,40 @@
+version: 2.1
+orbs:
+  go-module: timakin/go-module@0.0.5
+jobs:
+  test:
+    docker:
+      - image: 'circleci/golang:1.11.1-stretch'
+    steps:
+      - checkout
+      - go-module/setup
+
+      # - run:
+      #     name: Setup Code Climate test-reporter
+      #     command: |
+      #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      #       chmod +x ./cc-test-reporter
+
+      - run:
+          name: Run tests
+          command: |
+            # ./cc-test-reporter before-build
+            go test ./... -coverprofile=c.out
+            # ./cc-test-reporter after-build -d -r $CODE_CLIMATE_TOKEN --coverage-input-type gocov -p ./ --exit-code $?
+      - run:
+          name: Convert html
+          command: go tool cover -html c.out -o c.html
+
+      - store_artifacts:
+          path: c.out
+          destination: c.out
+
+      - store_artifacts:
+          path: c.html
+          destination: c.html
+
+workflows:
+  version: 2.1
+  test:
+    jobs:
+      - test
