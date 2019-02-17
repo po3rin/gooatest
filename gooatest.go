@@ -13,7 +13,7 @@ import (
 )
 
 // Validator impliments validate methods
-// to validate HTTP Response & Request While against Open API Specification..
+// to validate HTTP Response & Request While against Open API Specification.
 type Validator interface {
 	ValidateRequest() error
 	ValidateResponse() error
