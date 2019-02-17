@@ -60,7 +60,7 @@ func newRouterFromYAML(path string) (*openapi3filter.Router, error) {
 func NewValidator(p Params) (Validator, error) {
 	request := p.ResponseRecoder.Result().Request
 	uri := path.Join(p.Host, request.URL.Path)
-	u, err := url.Parse(p.Host)
+	u, err := url.Parse(uri)
 	if err != nil {
 		return nil, err
 	}
