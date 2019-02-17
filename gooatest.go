@@ -60,16 +60,16 @@ func newRouterFromYAML(path string) (*openapi3filter.Router, error) {
 
 // NewValidator generates new Validator.
 func NewValidator(p Params) (Validator, error) {
-	uri := path.Join(p.Host, p.HTTPReq.URL.String())
-	u, err := url.Parse(uri)
+	h, err := url.Parse(p.Host)
 	if err != nil {
 		return nil, err
 	}
+	uri := path.Join(h.Path, p.HTTPReq.URL.String())
 	router, err := newRouterFromYAML(p.SchemaPath)
 	if err != nil {
 		return nil, err
 	}
-	route, _, err := router.FindRoute(p.HTTPReq.Method, u)
+	route, _, err := router.FindRoute(p.HTTPReq.Method, uri)
 	if err != nil {
 		return nil, err
 	}
