@@ -17,8 +17,8 @@ import (
 
 func TestValidateResponse() {
     // prepare http.Request & httptest.Response.
-	httpReq, _ := http.NewRequest(http.MethodGet, "/users", nil)
-	responseRecoder:= &httptest.ResponseRecorder{
+    httpReq, _ := http.NewRequest(http.MethodGet, "/users", nil)
+    responseRecoder:= &httptest.ResponseRecorder{
         Code: 200,
         HeaderMap: http.Header{
             "Content-Type": []string{"application/json"},
