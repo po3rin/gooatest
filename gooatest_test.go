@@ -72,27 +72,14 @@ func TestGetValidateResponse(t *testing.T) {
 			},
 			expectedError: true,
 		},
-		{
-			name:    "no_code",
-			httpReq: httpReq,
-			responseRecoder: &httptest.ResponseRecorder{
-				HeaderMap: http.Header{
-					"Content-Type": []string{
-						commonContentType,
-					},
-				},
-				Body: bytes.NewBufferString(`{"users":[{"id":1,"name":"po3rin","added_at":"2018-12-01T00:00:00Z"}]}`),
-			},
-			expectedError: true,
-		},
 	}
 	for _, tt := range tests {
 		p := gooatest.Params{
-			HTTPReq:         tt.httpReq,
-			BaseURL:         "http://localhost:8080",
-			SchemaPath:      schemaPath,
-			Context:         commonContext,
-			ResponseRecoder: tt.responseRecoder,
+			BaseURL:    "http://localhost:8080",
+			Context:    commonContext,
+			SchemaPath: schemaPath,
+			HTTPReq:    tt.httpReq,
+			HTTPRes:    tt.responseRecoder.Result(),
 		}
 		v, err := gooatest.NewValidator(p)
 		if err != nil {
@@ -146,11 +133,11 @@ func TestPostValidateResponse(t *testing.T) {
 			t.Errorf("test %+v detects unexpected error. %v\n", tt.name, err)
 		}
 		p := gooatest.Params{
-			HTTPReq:         httpReq,
-			BaseURL:         "http://localhost:8080",
-			SchemaPath:      schemaPath,
-			Context:         commonContext,
-			ResponseRecoder: tt.responseRecoder,
+			HTTPReq:    httpReq,
+			BaseURL:    "http://localhost:8080",
+			SchemaPath: schemaPath,
+			Context:    commonContext,
+			HTTPRes:    tt.responseRecoder.Result(),
 		}
 		v, err := gooatest.NewValidator(p)
 		if err != nil {

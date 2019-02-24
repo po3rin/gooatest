@@ -4,7 +4,6 @@ import (
 	"context"
 	"io/ioutil"
 	"net/http"
-	"net/http/httptest"
 	"net/url"
 	"os"
 	"path"
@@ -29,11 +28,11 @@ type OpenAPIValidator struct {
 
 // Params is validator params
 type Params struct {
-	HTTPReq         *http.Request
-	BaseURL         string
-	SchemaPath      string
-	Context         context.Context
-	ResponseRecoder *httptest.ResponseRecorder
+	HTTPReq    *http.Request
+	HTTPRes    *http.Response
+	BaseURL    string
+	SchemaPath string
+	Context    context.Context
 }
 
 // NewRouterFromYAML generates new router from YAML.
@@ -84,11 +83,11 @@ func NewValidator(p Params) (Validator, error) {
 	}
 	responseValidationInput := &openapi3filter.ResponseValidationInput{
 		RequestValidationInput: requestValidationInput,
-		Status:                 p.ResponseRecoder.Code,
-		Header:                 p.ResponseRecoder.HeaderMap,
+		Status:                 p.HTTPRes.StatusCode,
+		Header:                 p.HTTPRes.Header,
 	}
-	if p.ResponseRecoder.Body != nil {
-		body, err := ioutil.ReadAll(p.ResponseRecoder.Body)
+	if p.HTTPRes.Body != nil {
+		body, err := ioutil.ReadAll(p.HTTPRes.Body)
 		if err != nil {
 			return nil, err
 		}
