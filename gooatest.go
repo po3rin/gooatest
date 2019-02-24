@@ -45,9 +45,9 @@ func newRouterFromYAML(path string) (*openapi3filter.Router, error) {
 	if err != nil {
 		return nil, err
 	}
-	swagger, err := openapi3.NewSwaggerLoader(
-		IsExternalRefsAllowed: true,
-	).LoadSwaggerFromYAMLData(data)
+	sl := openapi3.NewSwaggerLoader()
+	sl.IsExternalRefsAllowed = true
+	swagger, err := sl.LoadSwaggerFromYAMLData(data)
 	if err != nil {
 		return nil, err
 	}
