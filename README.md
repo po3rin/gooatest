@@ -16,7 +16,7 @@ import (
 )
 
 func TestValidateResponse() {
-    // prepare http.Request & httptest.Response.
+    // prepare http.Request & http.Response.
     httpReq, _ := http.NewRequest(http.MethodGet, "/users", nil)
     responseRecoder:= &httptest.ResponseRecorder{
         Code: 200,
@@ -25,11 +25,13 @@ func TestValidateResponse() {
         },
         Body: bytes.NewBufferString(`{"users":[{"id":1,"name":"po3rin","added_at":"2018-12-01T00:00:00Z"}]}`),
     }
+    // you able to get http.Response from httptest.ResponseRecorder using Result()
+    httpRes := responseRecoder.Result()
 
     // prepare gooatest.Params to init validator.
     p := gooatest.Params{
         HTTPReq:         httpReq,
-        HTTPRes:         responseRecoder.Result(),
+        HTTPRes:         httpRes,
         BaseURL:         "http://localhost:8080",
         SchemaPath:      "_test/schema/schema.yml",
         Context:         context.Background(),
