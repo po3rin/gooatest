@@ -29,10 +29,10 @@ func TestValidateResponse() {
     // prepare gooatest.Params to init validator.
     p := gooatest.Params{
         HTTPReq:         httpReq,
+        HTTPRes:         responseRecoder.Result(),
         BaseURL:         "http://localhost:8080",
         SchemaPath:      "_test/schema/schema.yml",
         Context:         context.Background(),
-        ResponseRecoder: responseRecoder,
     }
 
     // init validator using gooatest.Params.
